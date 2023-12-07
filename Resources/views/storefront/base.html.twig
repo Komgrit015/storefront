@@ -1,0 +1,103 @@
+{#{% sw_extends '@SwagB2bPlatform/storefront/base.html.twig' %}#}
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{% block base_doctype %}
+    {{ parent() }}
+{% endblock %}
+
+{% block base_html %}
+    {{ parent() }}
+{% endblock %}
+
+{% block base_head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block base_body %}
+    <body class="{% block base_body_classes %}is-ctl-{% if controllerName is not empty %}{{ controllerName|lower }}{% endif %} is-act-{% if controllerAction is not empty %}{{ controllerAction|lower }}{% endif %}{% endblock %}">
+
+    {% block base_body_inner %}
+        {% block base_noscript %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block base_header %}
+            <header class="header-main">
+                {% block layout_announcement %}
+                    <div class="w-100 d-block announcement-container">
+                        <div class="container">
+
+                            {% sw_include '@Storefront/storefront/layout/header/announcement.html.twig' %}
+                        </div>
+                    </div>
+                {% endblock %}
+
+                {# Inherit from parent block. #}
+                {% block layout_top_bar %}
+                    <div class="w-100 d-none d-lg-block nav-container">
+                        <div class="container">
+
+                            {% sw_include '@Storefront/storefront/layout/header/top-bar.html.twig' %}
+                        </div>
+                    </div>
+                {% endblock %}
+
+                {% block base_header_inner %}
+                    {{ parent() }}
+                    <div class="w-100 d-none d-lg-block">
+                        <div class="container px-0 py-4">
+                            {% sw_include '@Storefront/storefront/layout/navigation/navigation.html.twig' %}
+                        </div>
+                    </div>
+                {% endblock %}
+            </header>
+
+        {% endblock %}
+
+        {% block base_navigation %}
+        {% endblock %}
+
+        {% block base_offcanvas_navigation %}
+            {{ parent() }}
+        {% endblock %}
+
+        {% block base_main %}
+            <main class="content-main">
+                {% block base_flashbags %}
+                    {{ parent() }}
+                {% endblock %}
+
+                {% block base_main_inner %}
+                    <div class="container">
+                        {% block base_main_container %}
+                            <div class="container-main">
+                                {% block base_content %}{% endblock %}
+                            </div>
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+            </main>
+        {% endblock %}
+
+        {% block base_footer %}
+            {{ parent() }}
+        {% endblock %}
+    {% endblock %}
+
+    {% block base_scroll_up %}
+        {{ parent() }}
+    {% endblock %}
+
+    {% block base_cookie_permission %}
+        {{ parent() }}
+    {% endblock %}
+
+    {% block base_pseudo_modal %}
+        {{ parent() }}
+    {% endblock %}
+
+    {% block base_body_script %}
+        {{ parent() }}
+    {% endblock %}
+    </body>
+{% endblock %}

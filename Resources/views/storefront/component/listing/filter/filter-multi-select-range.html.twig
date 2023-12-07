@@ -1,0 +1,212 @@
+{% set filterItemId = 'filter-' ~ name ~ '-' ~ random() %}
+
+{% if pluginSelector is not defined %}
+    {% set pluginSelector = 'filter-multi-select' %}
+{% endif %}
+
+{% if dataPluginSelectorOptions is not defined %}
+    {% set dataPluginSelectorOptions = {
+        name: name,
+        snippets: {
+            disabledFilterText: 'listing.disabledFilterTooltip'|trans|sw_sanitize
+        }
+    } %}
+{% endif %}
+
+{% block component_filter_multi_select %}
+    <div class="filter-multi-select filter-multi-select-{{ name }} filter-panel-item{% if not sidebar %} dropdown{% endif %}{% if feature('v6.5.0.0') %} d-grid{% endif %}"
+         data-{{ pluginSelector }}="true"
+         data-{{ pluginSelector }}-options='{{ dataPluginSelectorOptions|json_encode }}'>
+
+        {% block component_filter_multi_select_toggle %}
+            <button class="filter-panel-item-toggle btn{% if sidebar and not feature('v6.5.0.0') %} btn-block{% endif %}"
+                    aria-expanded="false"
+            {% if sidebar %}
+                {{ dataBsToggleAttr }}="collapse"
+                {{ dataBsTargetAttr }}="#{{ filterItemId }}"
+            {% else %}
+                {{ dataBsToggleAttr }}="dropdown"
+                data-boundary="viewport"
+                {{ dataBsOffsetAttr }}="0,8"
+                aria-haspopup="true"
+            {% endif %}>
+
+                {% block component_filter_multi_select_display_name %}
+                    {{ displayName }}
+                {% endblock %}
+
+                {% block component_filter_multi_select_count %}
+                    <span class="filter-multi-select-count"></span>
+                {% endblock %}
+
+                {% block component_filter_multi_select_toggle_icon %}
+{#                    {% sw_icon 'arrow-medium-down' style {#}
+{#                        'pack': 'solid', 'size': 'xs', 'class': 'filter-panel-item-toggle'#}
+{#                    } %}#}
+{#                    {% sw_icon 'filter-active' style {#}
+{#                        'namespace': 'VinaturelStorefront',#}
+{#                        'pack': 'vinaturel',#}
+{#                        'class': 'filter-panel-item-toggle'#}
+{#                    } %}#}
+                        {% sw_icon 'arrow-medium-down' style {'pack': 'solid', 'size': 'xs', 'class': 'filter-panel-item-toggle'} %}
+                {% endblock %}
+            </button>
+        {% endblock %}
+
+        {% block component_filter_multi_select_dropdown %}
+            <div class="filter-multi-select-dropdown filter-panel-item-dropdown{% if sidebar %} collapse{% else %} dropdown-menu{% endif %}"
+                 id="{{ filterItemId }}">
+                <div class="element-icon-polygon">
+                {% block component_filter_multi_select_list %}
+                    <ul class="filter-multi-select-list" style="display: none;">
+                        {% set rangeMin = 2 %}
+                        {% set rangeMax = -1 %}
+                        {% for element in elements %}
+                            {% set rangeMax = max(element.translated.name, rangeMax) %}
+                            {% set rangeMin = min(element.translated.name, rangeMin) %}
+                            {% block component_filter_multi_select_list_item %}
+                                <li class="filter-multi-select-list-item">
+                                    {% block component_filter_multi_select_list_item_inner %}
+                                        {% sw_include '@Storefront/storefront/component/listing/filter/filter-multi-select-list-item.html.twig' %}
+                                    {% endblock %}
+                                </li>
+                            {% endblock %}
+                        {% endfor %}
+                    </ul>
+
+                    {#check component_filter_multi_select_list_item_inner type == checkbox#}
+                    <div id="{{ filterItemId }}-wrapper" class="range-slide-wrapper">
+                        <div class="filter-range-container">
+                            <div class="item-slider">
+                                <div class="item-progress"></div>
+                            </div>
+
+                            <div class="item-range-input">
+                                <span id="display-no-min-{{ filterItemId }}" class="display-range-number">{{ rangeMin }}</span>
+                                <input type="range" id="{{ filterItemId }}-min" class="range-min" min="0" max="" step="1" value="0" oninput="this.previousElementSibling.innerHTML =  this.value ">
+                                <span id="display-no-max-{{ filterItemId }}" class="display-range-number ranges-number-right">{{ rangeMax }}</span>
+                                <input type="range" id="{{ filterItemId }}-max" class="range-max" min="0" max="" step="1" oninput="this.previousElementSibling.innerHTML =  this.value ">
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+						(function () {
+							var list = document.getElementById('{{ filterItemId }}').querySelector("ul");
+							var range = document.getElementById('{{ filterItemId }}').querySelector(".item-slider .item-progress");
+
+							let state = {
+								optionValues: [],
+								filterValues: [],
+								activeFilterValues: [],
+							};
+
+							function updateState(key, value)
+							{
+								state[key] = value;
+							}
+
+							function initFilterValues()
+							{
+								updateState('optionValues', list.querySelectorAll("li input"));
+								updateState('filterValues', Array.from(state.optionValues).map(function (item) {
+									return item.getAttribute('data-label');
+								}));
+
+								state.filterValues.sort();
+								state.activeFilterValues.sort();
+
+								const rangeMinValue = Math.min(...state.filterValues);
+								const rangeMaxValue = Math.max(...state.filterValues);
+
+								document.getElementById("{{ filterItemId }}-min").min = rangeMinValue;
+								document.getElementById("{{ filterItemId }}-min").max = rangeMaxValue;
+								document.getElementById("{{ filterItemId }}-max").min = rangeMinValue;
+								document.getElementById("{{ filterItemId }}-max").max = rangeMaxValue;
+								document.getElementById("{{ filterItemId }}-min").step = 0 !== state.filterValues[0] % 1 ? 0.01 : 1;
+								document.getElementById("{{ filterItemId }}-max").step = 0 !== state.filterValues[0] % 1 ? 0.01 : 1;
+
+								priceGap = 0 !== state.filterValues[0] % 1 ? 0.01 : 1;
+								if (state.filterValues.length === 1) {
+									document.getElementById('{{ filterItemId }}-wrapper').style.display = 'none';
+                                }
+
+								state.optionValues.forEach(el => {
+									el.addEventListener('input', function () { updateFilterValues() });
+                                });
+
+								const rangeInput = document.querySelectorAll('#{{ filterItemId }} .item-range-input input');
+								document.getElementById("{{ filterItemId }}-max").value = rangeInput[0].max;
+
+								let rangeInputTimeout = null;
+								let rangesEl;
+								rangeInput.forEach(input => {
+                                    input.addEventListener("input", e => {
+										clearTimeout(rangeInputTimeout);
+										rangeInputTimeout = setTimeout(() => {
+											let minVal = parseFloat(rangeInput[0].value),
+												maxVal = parseFloat(rangeInput[1].value);
+											state.optionValues.forEach(el => {
+												if (el.getAttribute('data-label') >= minVal && el.getAttribute('data-label') <= maxVal) {
+													el.checked = true;
+													rangesEl = el;
+													// rangesEl.dispatchEvent(new Event('change'));
+												} else {
+													el.checked = false;
+												}
+											});
+											//trigger
+											rangesEl.dispatchEvent(new Event('change'));
+											document.querySelector('#{{ filterItemId }} .filter-multi-select-list').style.display = 'none';
+
+											rangeGap = rangeInput[0].max - rangeInput[0].min;
+											minSelected = minVal - rangeInput[0].min;
+											maxSelected = maxVal -rangeInput[0].max;
+											minPercentage = (minSelected * 100) / rangeGap;
+											maxPercentage = ((rangeInput[0].max - maxVal) * 100) / rangeGap;
+
+											// if((maxVal - minVal) < priceGap){
+											// 	console.log('111111111');
+											// 	if(e.target.className === "range-min"){
+											// 		rangeInput[0].value = maxVal - priceGap
+											// 	}else{
+											// 		rangeInput[1].value = minVal + priceGap;
+											// 	}
+											// }else{
+												range.style.left =  minPercentage + '%';
+                                                minPercentage -= (minPercentage / 3);
+
+												document.getElementById("display-no-min-{{ filterItemId }}").style.left = minPercentage + '%';
+												document.getElementById("display-no-min-{{ filterItemId }}").innerHTML = minVal;
+												document.getElementById("display-no-min-{{ filterItemId }}").style.display = 'block';
+
+												range.style.right = maxPercentage + '%';
+                                                maxPercentage -= (maxPercentage / 3);
+
+												document.getElementById("display-no-max-{{ filterItemId }}").style.right = maxPercentage + '%';
+												document.getElementById("display-no-max-{{ filterItemId }}").innerHTML =  maxVal ;
+												document.getElementById("display-no-max-{{ filterItemId }}").style.display = 'block';
+
+											// }
+                                        }, 500);
+									});
+								});
+                            }
+
+							function updateFilterValues()
+							{
+								updateState('activeFilterValues', Array.from(state.optionValues).map(function (item) {
+									return item.checked;
+								}));
+
+                            }
+							initFilterValues();
+
+                        })()
+
+                    </script>
+                {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}

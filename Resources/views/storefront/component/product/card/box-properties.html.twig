@@ -1,0 +1,49 @@
+{% block component_product_box_properties %}
+    <div class="product-properties">
+        {% if  product.purchaseUnit %}
+            <div class="product-properties-unit-text">
+                <span class="font-weight-bolder">{{ "product_properties_size"|trans|raw }} :</span>
+                <span class="product-properties-unit-option">
+                  {{ product.purchaseUnit }} ml
+                </span>
+            </div>
+        {% endif %}
+
+        {% if propertiesArray.lagers %}
+            <div class="product-properties-jahr-text">
+                <span class="font-weight-bolder">{{ "product_properties_lager"|trans|raw }} :</span>
+                <span class="product-properties-jahr-option">
+                    <span class="list-inline-item">{{ propertiesArray.lagers|raw }}</span>
+                </span>
+            </div>
+        {% endif %}
+
+        {% if propertiesArray.years %}
+            <div class="product-properties-jahr-text">
+                <span class="font-weight-bolder">{{ "product_properties_jahr"|trans|raw }} :</span>
+                <span class="product-properties-jahr-option">
+                    <span class="list-inline-item">{{ propertiesArray.years|raw }}</span>
+                </span>
+            </div>
+        {% endif %}
+
+        {% if propertiesArray.regions %}
+            <div class="product-properties-region-text">
+                <span class="font-weight-bolder">{{ "product_properties_region"|trans|raw }} :</span>
+                <span class="product-properties-region-option">
+                    <span class="list-inline-item">{{ propertiesArray.regions|raw }}</span>
+                </span>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+ {% block component_product_box_rating %}
+     {% if product.ratingAverage %}
+         <div class="product-rating">
+             <span class="font-weight-bold">{{ 'product.detail.rating'|trans }} : </span>
+             <span>{{ product.ratingAverage|round(2, 'common')*20 ~ ' / 100'  }}</span>
+         </div>
+     {% endif %}
+ {% endblock %}
+

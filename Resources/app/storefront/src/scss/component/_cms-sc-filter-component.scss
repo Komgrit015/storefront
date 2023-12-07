@@ -1,0 +1,102 @@
+.element-icon-polygon{
+    padding: 20px 0 0 0 ;
+}
+
+.filter-range-container{
+    display: grid;
+    .slider,
+    .item-slider{
+        background: rgb(231 91 45 / 30%);
+        height: 5px;
+        position: relative;
+        background: #ddd;
+        border-radius: 5px;
+        .item-progress,
+        .progress{
+            height: 100%;
+            left: 0;
+            right: 0;
+            position: absolute;
+            border-radius: 5px;
+            background: #e1c62c;
+        }
+    }
+    .item-range-input,
+    .range-input{
+        position: relative;
+        input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #edd85e;
+            cursor: pointer;
+        }
+        input{
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            top: -5px;
+            background: none;
+            pointer-events: none;
+            -webkit-appearance: none;
+        }
+    }
+
+    .item-range-input{
+        display: flex;
+        justify-content: space-between;
+        span{
+            margin-top: 14px;
+        }
+    }
+
+    .price-input{
+        width: 100%;
+        display: flex;
+        margin: 14px 0;
+        .field{
+            gap: 5px;
+            display: flex;
+            align-items: center;
+            input{
+                font-size: 14px;
+                margin-bottom: 2px;
+                width: 42px;
+                height: 100%;
+                outline: none;
+                margin-left: 12px;
+                text-align: right;
+                border: none;
+                padding: 0;
+            }
+        }
+        .separator{
+            width: 48px;
+            display: flex;
+            font-size: 19px;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
+input[type="range"]::-webkit-slider-thumb{
+    height: 17px;
+    width: 17px;
+    border-radius: 50%;
+    background: #274e37;
+    pointer-events: auto;
+    -webkit-appearance: none;
+    box-shadow: 0 0 6px rgba(0,0,0,0.05);
+}
+input[type="range"]::-moz-range-thumb{
+    height: 17px;
+    width: 17px;
+    border: none;
+    border-radius: 50%;
+    background: #274e37;
+    pointer-events: auto;
+    -moz-appearance: none;
+    box-shadow: 0 0 6px rgba(0,0,0,0.05);
+}

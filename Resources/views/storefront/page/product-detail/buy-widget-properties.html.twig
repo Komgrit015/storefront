@@ -1,0 +1,61 @@
+
+{% set propertyGroupIds = {
+    '6d3e04d9b87a4668a945bf4012591c39': 'year',
+    'ced9356fbb6e45b48151b4337df48a25': 'winetype',
+
+} %}
+
+{% set properties = {} %}
+{% for property in page.product.sortedProperties.elements %}
+    {% if 'year' == propertyGroupIds[property.id] %}
+        {% set properties = properties|merge({ year: property }) %}
+    {% elseif 'winetype' == propertyGroupIds[property.id] %}
+        {% set properties = properties|merge({ winetype: property }) %}
+    {% endif %}
+{% endfor %}
+
+
+        {#     {% block component_product_box_rating %}#}
+        {#         {% if config('core.listing.showReview') %}#}
+        {#             <div class="product-rating">#}
+        {#                 {% if page.product.ratingAverage %}#}
+        {#                     {% sw_include '@Storefront/storefront/component/review/rating.html.twig' with {#}
+        {#                         points: page.product.ratingAverage,#}
+        {#                         style: 'text-primary'#}
+        {#                     } %}#}
+        {#                 {% endif %}#}
+        {#             </div>#}
+        {#         {% endif %}#}
+        {#     {% endblock %}#}
+
+{#{{ dump(page.product.ratingAverage) }}#}
+
+    {% block page_product_detail_properties %}
+        <div class="year-unit-container font-weight-bold">
+            {% if properties.year.options.elements %}
+                {% for option in properties.year.options.elements %}
+                    {% if not break %}
+                        <a href="/Weine-kaufen/?order=name-asc&p=1&properties={{ option.id }}">{{ option.name }}</a>
+                    {% endif %}
+                    {% set break = true %}
+                {% endfor %}
+            {% endif %}
+            {% if properties.year.options.elements and page.product.purchaseUnit %}&nbsp;/&nbsp;{% endif %}
+            {% if page.product.purchaseUnit %}
+                {{ page.product.purchaseUnit }} {{ page.product.unit.translated.name ~  'ml'}}
+            {% endif %}
+        </div>
+
+        <div class="wine-type-container">
+            {% if properties.winetype.options.elements %}
+                {% for option in properties.winetype.options.elements %}
+                    {% if not break %}
+                        {% sw_icon 'bottle' style {'namespace': 'SwagTemplate', 'pack': 'swag'} %}
+                         <a href="/Weine-kaufen/?order=name-asc&p=1&properties={{ option.id }}">{{ option.name }}</a>
+                    {% endif %}
+                    {% set break = true %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endblock %}
+

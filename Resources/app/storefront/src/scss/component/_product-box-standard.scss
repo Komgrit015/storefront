@@ -1,0 +1,22 @@
+.product-action{
+    padding: 1rem;
+}
+
+
+.status-bio{
+    position: absolute;
+    top: 66px;
+    left: -17px;
+    z-index: 10;
+    p{
+        background: #648361;
+        color: #fff;
+        font-weight: 600;
+        width: fit-content;
+        padding: 5px 10px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+}

@@ -1,0 +1,19 @@
+{% sw_extends "@Storefront/storefront/utilities/offcanvas.html.twig" %}
+{% block utilities_offcanvas_content %}
+{#    {{ dump(page.product.sortedProperties) }}#}
+    {{ page.product.customFields.custom_training_text|raw }}
+
+    {% set sportsMediaId = page.product.customFields.custom_training_img %}
+
+    {# fetch media as batch - optimized for performance #}
+    {% set mediaCollection = searchMedia([sportsMediaId], context.context) %}
+
+    {# extract single media object #}
+    {% set sportsMedia = mediaCollection.get(sportsMediaId) %}
+
+    <img src="{{ sportsMedia.url }}" alt="">
+    {% sw_thumbnails 'my-sportsMedia-thumbnails' with {
+        media: sportsMedia
+    } %}
+
+{% endblock %}

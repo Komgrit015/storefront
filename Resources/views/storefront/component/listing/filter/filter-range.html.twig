@@ -1,0 +1,193 @@
+{% set filterItemId = 'filter-' ~ name ~ '-' ~ random() %}
+
+{% if filterRangeActiveMinLabel is not defined %}
+    {% set filterRangeActiveMinLabel = 'listing.filterRangeActiveMinLabel'|trans({'%displayName%': displayName})|sw_sanitize %}
+{% endif %}
+
+{% if filterRangeActiveMaxLabel is not defined %}
+    {% set filterRangeActiveMaxLabel = 'listing.filterRangeActiveMaxLabel'|trans({'%displayName%': displayName})|sw_sanitize %}
+{% endif %}
+
+{% if filterRangeErrorMessage is not defined %}
+    {% set filterRangeErrorMessage = 'listing.filterRangeErrorMessage'|trans|sw_sanitize %}
+{% endif %}
+
+{% if filterRangeLowerBoundErrorMessage is not defined %}
+    {% set filterRangeLowerBoundErrorMessage = 'listing.filterRangeLowerBoundErrorMessage'|trans({'%lowerBound%': lowerBound})|sw_sanitize %}
+{% endif %}
+
+{% if minKey is not defined %}
+    {% set minKey = 'min-price' %}
+{% endif %}
+
+{% if maxKey is not defined %}
+    {% set minKey = 'max-price' %}
+{% endif %}
+
+{% if unit is not defined %}
+    {% set unit = page.header.activeCurrency.symbol %}
+{% endif %}
+
+{# @deprecated tag:v6.5.0 - `currencySymbol` will be removed use `unit` instead #}
+{% if currencySymbol is defined %}
+    {% set unit = currencySymbol %}
+{% endif %}
+
+{% if minInputValue is not defined %}
+    {% set minInputValue = 0 %}
+{% endif %}
+
+{% if maxInputValue is not defined %}
+    {# @deprecated tag:v6.5.0 - use maxInputValue instead of price #}
+    {% set maxInputValue = price.max %}
+{% endif %}
+
+{% set filterRangeOptions = {
+    name,
+    minKey,
+    maxKey,
+    lowerBound,
+    unit,
+    currencySymbol,
+    snippets: {
+        filterRangeActiveMinLabel,
+        filterRangeActiveMaxLabel,
+        filterRangeErrorMessage,
+        filterRangeLowerBoundErrorMessage
+    }
+} %}
+
+{% block component_filter_range %}
+    {# @deprecated tag:v6.5.0 - Bootstrap v5 removes `btn-block` class, use `d-grid` wrapper instead #}
+    <div class="filter-range filter-panel-item{% if not sidebar %} dropdown{% endif %}{% if feature('v6.5.0.0') %} d-grid{% endif %}"
+         data-filter-range="true"
+         data-filter-range-options='{{ filterRangeOptions|json_encode }}'>
+
+        {% block component_filter_range_toggle %}
+            {# @deprecated tag:v6.5.0 - Bootstrap v5 removes `btn-block` class, use `d-grid` wrapper instead #}
+            <button class="filter-panel-item-toggle btn{% if sidebar and not feature('v6.5.0.0') %} btn-block{% endif %}"
+                    aria-expanded="false"
+            {% if sidebar %}
+                {{ dataBsToggleAttr }}="collapse"
+                {{ dataBsTargetAttr }}="#{{ filterItemId }}"
+            {% else %}
+                {{ dataBsToggleAttr }}="dropdown"
+                data-boundary="viewport"
+                {{ dataBsOffsetAttr }}="0,8"
+                aria-haspopup="true"
+            {% endif %}>
+
+            {% block component_filter_range_display_name %}
+                {{ displayName }}
+            {% endblock %}
+
+            {% block component_filter_range_toggle_icon %}
+                {% sw_icon 'arrow-medium-down' style {'pack': 'solid', 'size': 'xs', 'class': 'filter-panel-item-toggle'} %}
+            {% endblock %}
+            </button>
+        {% endblock %}
+
+        {% block component_filter_range_dropdown %}
+            <div class="filter-range-dropdown filter-panel-item-dropdown{% if sidebar %} collapse{% else %} dropdown-menu{% endif %}"
+                 id="{{ filterItemId }}">
+                <div class="element-icon-polygon">
+                    {% block component_filter_range_container %}
+                        <div class="filter-range-container">
+
+                            <div class="slider">
+                                <div class="progress"></div>
+                            </div>
+
+                            <div class="range-input">
+                                {% block component_filter_range_min %}
+                                    {% block component_filter_range_min_input %}
+                                        <input type="range" id="range-min" class="range-min" min="0" max="{{ price.max }}" step="1" value="0">
+                                    {% endblock %}
+                                {% endblock %}
+
+                                {% block component_filter_range_max %}
+                                    {% block component_filter_range_max_input %}
+                                        <input type="range" id="range-max" class="range-max" min="0" max="{{ price.max }}" step="1" value="{{ price.max }}">
+                                    {% endblock %}
+                                {% endblock %}
+                            </div>
+
+                            <div class="price-input">
+                                <div class="field">
+                                    {% block component_filter_range_min_label %}
+                                        <span>{{ 'listing.filterRangeMinLabel'|trans|sw_sanitize }}</span>
+                                    {% endblock %}
+                                    <input type="number" id="filter-min-price" class="form-control min-input input-min" name="min-price" value="0"> €
+                                </div>
+
+                                <div class="separator">-</div>
+
+                                <div class="field">
+                                    {% block component_filter_range_max_label %}
+                                        <span>{{ 'listing.filterRangeMaxLabel'|trans|sw_sanitize }}</span>
+                                    {% endblock %}
+
+                                    <input type="number" id="filter-max-price" class="form-control max-input input-max" name="max-price" value="{{ price.max }}"> €
+
+                                </div>
+                            </div>
+
+
+                            <script>
+                                const priceFilter = document.querySelector('#{{ filterItemId }}');
+                                const rangeInput = priceFilter.querySelectorAll(".range-input input"),
+                                    priceInput = priceFilter.querySelectorAll(".price-input input"),
+                                    range = priceFilter.querySelector(".slider .progress");
+                                let priceGap = 1;
+
+                                priceInput.forEach(input =>{
+                                    input.addEventListener("input", e =>{
+                                        let minPrice = parseInt(priceInput[0].value),
+                                            maxPrice = parseInt(priceInput[1].value);
+
+                                        if((maxPrice - minPrice >= priceGap) && maxPrice <= rangeInput[1].max){
+                                            // if(e.target.className === "min-input"){
+                                            rangeInput[0].value = minPrice;
+                                            range.style.left = ((minPrice / rangeInput[0].max) * 100) + "%";
+                                            // }else{
+                                            rangeInput[1].value = maxPrice;
+                                            range.style.right = 100 - (maxPrice / rangeInput[1].max) * 100 + "%";
+                                            // }
+                                        }
+
+                                    });
+                                });
+
+                                rangeInput.forEach(input =>{
+                                    input.addEventListener("input", e =>{
+                                        let minVal = parseInt(rangeInput[0].value),
+                                            maxVal = parseInt(rangeInput[1].value);
+
+                                        if((maxVal - minVal) < priceGap){
+                                            if(e.target.className === "range-min"){
+                                                rangeInput[0].value = maxVal - priceGap
+                                            }else{
+                                                rangeInput[1].value = minVal + priceGap;
+                                            }
+                                        }else{
+                                            priceInput[0].value = minVal;
+                                            priceInput[0].dispatchEvent(new Event("input"));
+
+                                            priceInput[1].value = maxVal;
+                                            priceInput[1].dispatchEvent(new Event("input"));
+
+                                            range.style.left = ((minVal / rangeInput[0].max) * 100) + "%";
+                                            range.style.right = 100 - (maxVal / rangeInput[1].max) * 100 + "%";
+                                        }
+                                    });
+                                });
+
+
+                            </script>
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
