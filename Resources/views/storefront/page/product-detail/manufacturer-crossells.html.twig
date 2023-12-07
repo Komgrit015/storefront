@@ -1,7 +1,7 @@
 {% sw_extends '@Storefront/storefront/element/cms-element-product-slider.html.twig' %}
 
 {% block element_product_slider %}
-    {{ dump(page) }}
+    
     {% if manufacturer and page.manufacturerCrosssells.count %}
         {% if not sliderConfig %}
             {% set title = "swag.cms.otherWinesTitle" | trans %}
