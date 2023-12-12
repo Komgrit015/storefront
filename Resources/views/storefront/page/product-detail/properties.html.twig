@@ -62,11 +62,21 @@
                                             name: property.translated.name,
                                             value: [option.translated.name],
                                         } } %}
+
                                     {% elseif 'year' == propertyGroupIds[property.id] %}
-                                        {% set optionItem = { year: {
-                                            name: property.translated.name,
-                                            value: [option.translated.name],
-                                        } } %}
+                                        {{ dump(productPropertiesGeneral.year.value) }}
+                                        {{ dump(property) }}
+                                        {% if productPropertiesGeneral.year.value %}
+                                            {% set optionItem = { year: {
+                                                name: property.translated.name,
+                                                value: [productPropertiesGeneral.year.value|join(', ') ~ ', ' ~ option.translated.name],
+                                            } } %}
+                                        {% else %}
+                                            {% set optionItem = { year: {
+                                                name: property.translated.name,
+                                                value: [option.translated.name],
+                                            } } %}
+                                        {% endif %}
                                     {% elseif 'winetype' == propertyGroupIds[property.id] %}
                                         {% set optionItem = { winetype: {
                                             name: property.translated.name,
