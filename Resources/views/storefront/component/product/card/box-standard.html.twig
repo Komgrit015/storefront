@@ -2,6 +2,7 @@
 
 
 {% block component_product_box %}
+
     {% if product %}
         {% set name = product.translated.name %}
         {% set id = product.id %}
@@ -30,13 +31,14 @@
             {% set propertiesArray = propertiesArray|merge({'bios' : productAttributes.bio|map(option => '<a href="/Weine-kaufen/?order=name-asc&p=1&properties=' ~ option.id ~ '">' ~ option.name ~ '</a>')|join(', ') }) %}
         {% endif %}
 
-{#        {{ dump(productAttributes.year) }}#}
+{#        {{ dump(productAttributes) }}#}
 
-        {% for test in product.sortedProperties %}
-            {% if test.id == "6d3e04d9b87a4668a945bf4012591c39" %}
-                {% set yyy = test.options %}
-                {% set propertiesArray = propertiesArray|merge({'years' : yyy|map(option => '<a href="/Weine-kaufen/?order=name-asc&p=1&properties=' ~ option.id ~ '">' ~ option.name ~ '</a>')|join(', ') }) %}
-{#                {{ dump(yyy) }}#}
+        {# Product year #}
+        {% for productSort in product.sortedProperties %}
+            {% if productSort.id == "6d3e04d9b87a4668a945bf4012591c39" %}
+                {% set productOption = productSort.options %}
+                {% set propertiesArray = propertiesArray|merge({'years' : productOption|map(option => '<a href="/Weine-kaufen/?order=name-asc&p=1&properties=' ~ option.id ~ '">' ~ option.name ~ '</a>')|join(', ') }) %}
+{#                {{ dump(productOption) }}#}
 
 {#                {% for yyy in test.options %}#}
 {#                    {% set propertiesArray = [] %}#}
@@ -46,8 +48,6 @@
             {% endif %}
 
         {% endfor %}
-
-{#         {{ dump(product.sortedProperties) }}#}
 
         <div class="card product-box box-{{ layout }}">
             {% block component_product_box_content %}
@@ -124,11 +124,11 @@
                                 {% endif %}
                             {% endblock %}
 
-
                         </div>
                     {% endblock %}
 
                     {% block component_product_box_info %}
+
                         <div class="product-info">
                             {% block component_product_box_name %}
                                 <a href="{{ seoUrl('frontend.detail.page', {'productId': id}) }}"
