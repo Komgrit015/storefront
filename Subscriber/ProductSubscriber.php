@@ -8,7 +8,15 @@ use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityLoadedEvent;
 use Shopware\Core\Framework\Struct\ArrayEntity;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Shopware\Core\Content\Product\ProductEvents;
-use Shopware\Core\Content\Property\Aggregate\PropertyGroupOption\PropertyGroupOptionEntity; // เพิ่มเติมที่นี่
+use Shopware\Core\Content\Property\Aggregate\PropertyGroupOption\PropertyGroupOptionEntity;
+
+use Shopware\Core\Content\Product\Events\ProductListingCriteriaEvent;
+
+use Shopware\Core\Content\Product\SalesChannel\Sorting\ProductSortingCollection;
+use Shopware\Core\Content\Product\SalesChannel\Sorting\ProductSortingEntity;
+use Shopware\Core\Framework\Uuid\Uuid;
+
+// เพิ่มเติมที่นี่
 
 class ProductSubscriber implements EventSubscriberInterface
 {
@@ -25,7 +33,53 @@ class ProductSubscriber implements EventSubscriberInterface
         return [
             ProductEvents::PRODUCT_LOADED_EVENT => 'onProductsLoaded',
             ProductListingResultEvent::class    => 'onProductListingResult',
+            ProductListingCriteriaEvent::class => ['onProductListingCriteria', 500],
         ];
+    }
+
+    public function onProductListingCriteria(ProductListingCriteriaEvent $event)
+    {
+        $criteria = $event->getCriteria();
+
+        // Add associations to load variants
+        $criteria->addAssociation('options');
+        $criteria->addAssociation('children');
+        $criteria->addAssociation('variation');
+
+
+
+        $availableSortings = $this->getAvailableSortings($event);
+
+
+        $availableSortings->add($this->createCustomSorting('Manufacturer ascending', 'testw', 'product.manufacturer.name', 'asc'));
+            $availableSortings->add($this->createCustomSorting('Properties Region', 'testwd','product.properties.group.name.Land/Region', 'desc'));
+
+
+        $event->getCriteria()->addExtension('sortings', $availableSortings);
+
+    }
+    private function getAvailableSortings(ProductListingCriteriaEvent $event): ProductSortingCollection
+    {
+        return $event->getCriteria()->getExtension('sortings') ?? new ProductSortingCollection();
+    }
+    private function createCustomSorting(string $label, string $key, string $field, string $order): ProductSortingEntity
+    {
+        $customSorting = new ProductSortingEntity();
+        $customSorting->setId(Uuid::randomHex());
+        $customSorting->setActive(true);
+        $customSorting->setTranslated(['label' => $label]);
+        $customSorting->setKey($key);
+        $customSorting->setPriority(5);
+        $customSorting->setFields([
+            [
+                'field' => $field,
+                'order' => $order,
+                'priority' => 1,
+                'naturalSorting' => 0,
+            ],
+        ]);
+
+        return $customSorting;
     }
 
     public function onProductsLoaded(EntityLoadedEvent $event): void
@@ -89,7 +143,6 @@ class ProductSubscriber implements EventSubscriberInterface
                 return 1;
         }
     }
-
     protected function getCategoryIdByName(string $categoryName): ?string
     {
         // ตัวอย่างการ implement เมทอดนี้เพื่อหา ID ของ category จากชื่อ
@@ -101,4 +154,6 @@ class ProductSubscriber implements EventSubscriberInterface
     {
         // สามารถทำการแก้ไขการปรับปรุงข้อมูลที่จะแสดงในหน้า product list ได้ตามต้องการ
     }
+
+
 }
