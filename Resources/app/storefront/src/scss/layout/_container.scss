@@ -122,6 +122,7 @@ div.sorting{
                 line-height: 45px;
                 border-bottom: 0.75px solid #F7F8F6;
                 cursor: pointer;
+                text-align: center;
                 &[data-selected="true"]{
                     color: #edd85e;
                 }
@@ -137,12 +138,12 @@ div.sorting{
     }
 
     .swag-sorting{
-        background-color: transparent;
         width: 220px;
         height: 60px;
         border: 3px solid #edd85e;
         border-radius: 0;
-        color: #edd85e;
+        color: #ffffff;
+        background: #edd85e;
         text-align: center;
         font-size: 16px;
         font-weight: 700;
@@ -152,5 +153,9 @@ div.sorting{
         justify-content: center;
         align-items: center;
         cursor: pointer;
+        &:hover{
+            background: transparent;
+            color: #edd85e;
+        }
     }
 }

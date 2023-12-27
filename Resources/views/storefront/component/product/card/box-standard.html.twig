@@ -13,9 +13,9 @@
         {% set propertiesArray = [] %}
 
         {# Product year #}
-{#        {% if productAttributes.year|length > 0 %}#}
-{#            {% set propertiesArray = propertiesArray|merge({'years' : productAttributes.year|map(option => '<a href="/Weine-kaufen/?order=name-asc&p=1&properties=' ~ option.id ~ '">' ~ option.name ~ '</a>')|join(', ') }) %}#}
-{#        {% endif %}#}
+        {#        {% if productAttributes.year|length > 0 %}#}
+        {#            {% set propertiesArray = propertiesArray|merge({'years' : productAttributes.year|map(option => '<a href="/Weine-kaufen/?order=name-asc&p=1&properties=' ~ option.id ~ '">' ~ option.name ~ '</a>')|join(', ') }) %}#}
+        {#        {% endif %}#}
 
         {# Product region #}
         {% if productAttributes.region|length > 0 %}
@@ -31,22 +31,19 @@
             {% set propertiesArray = propertiesArray|merge({'bios' : productAttributes.bio|map(option => '<a href="/Weine-kaufen/?order=name-asc&p=1&properties=' ~ option.id ~ '">' ~ option.name ~ '</a>')|join(', ') }) %}
         {% endif %}
 
-{#        {{ dump(productAttributes) }}#}
+        {#        {{ dump(productAttributes) }}#}
 
         {# Product year #}
         {% for productSort in product.sortedProperties %}
             {% if productSort.id == "6d3e04d9b87a4668a945bf4012591c39" %}
                 {% set productOption = productSort.options %}
                 {% set propertiesArray = propertiesArray|merge({'years' : productOption|map(option => '<a href="/Weine-kaufen/?order=name-asc&p=1&properties=' ~ option.id ~ '">' ~ option.name ~ '</a>')|join(', ') }) %}
-{#                {{ dump(productOption) }}#}
-
-{#                {% for yyy in test.options %}#}
-{#                    {% set propertiesArray = [] %}#}
-
-{#                    {% set propertiesArray = propertiesArray|merge({'years' : yyy|map(option =>  '<a href="/Weine-kaufen/?order=name-asc&p=1&properties=' ~ option.id ~ '">' ~ option.name ~ '</a>')|join(', ') }) %}#}
-{#                {% endfor %}#}
+                {#                {{ dump(productOption) }}#}
+                {#                {% for yyy in test.options %}#}
+                {#                    {% set propertiesArray = [] %}#}
+                {#                    {% set propertiesArray = propertiesArray|merge({'years' : yyy|map(option =>  '<a href="/Weine-kaufen/?order=name-asc&p=1&properties=' ~ option.id ~ '">' ~ option.name ~ '</a>')|join(', ') }) %}#}
+                {#                {% endfor %}#}
             {% endif %}
-
         {% endfor %}
 
         <div class="card product-box box-{{ layout }}">
@@ -120,7 +117,6 @@
                                     <div class="status-bio">
                                         <p>Bio</p>
                                     </div>
-
                                 {% endif %}
                             {% endblock %}
 
@@ -128,7 +124,6 @@
                     {% endblock %}
 
                     {% block component_product_box_info %}
-
                         <div class="product-info">
                             {% block component_product_box_name %}
                                 <a href="{{ seoUrl('frontend.detail.page', {'productId': id}) }}"
@@ -138,35 +133,42 @@
                                 </a>
                             {% endblock %}
 
-{#                            {% block component_product_box_variant_characteristics %}#}
-{#                                <div class="product-variant-characteristics">#}
-{#                                    <div class="product-variant-characteristics-text">#}
-{#                                        {% if not displayParent %}#}
-{#                                            {% for variation in product.variation %}#}
-{#                                                {{ variation.group }}:#}
-{#                                                <span class="product-variant-characteristics-option">#}
-{#                                                    {{ variation.option }}#}
-{#                                                </span>#}
-{#                                                {% if product.variation|last != variation %}#}
-{#                                                    {{ " | " }}#}
-{#                                                {% endif %}#}
-{#                                            {% endfor %}#}
-{#                                        {% endif %}#}
+                            {% block component_product_box_variant_characteristics %}
+                                    {#                                <div class="product-variant-characteristics">#}
+                                    {#                                    <div class="product-variant-characteristics-text">#}
+                                    {#                                        {% if not displayParent %}#}
+                                    {#                                            {% for variation in product.variation %}#}
+                                    {#                                                {{ variation.group }}:#}
+                                    {#                                                <span class="product-variant-characteristics-option">#}
+                                    {#                                                    {{ variation.option }}#}
+                                    {#                                                </span>#}
+                                    {#                                                {% if product.variation|last != variation %}#}
+                                    {#                                                    {{ " | " }}#}
+                                    {#                                                {% endif %}#}
+                                    {#                                            {% endfor %}#}
+                                    {#                                        {% endif %}#}
+                                    {#                                    </div>#}
+                                    {#                                </div>#}
+                                    {#                                {% for productSort in product.sortedProperties %}#}
+                                    {#                                    {% if productSort.id == "6d3e04d9b87a4668a945bf4012591c39" %}#}
+                                    {#                                        {% for options in productSort.options %}#}
+                                    {#                                            {{ dump(options.id) }}#}
+                                    {#                                        {% endfor %}#}
+                                    {#                                    {% endif %}#}
+                                    {#                                {% endfor %}#}
+                                    {#                                {{ dump(product) }}#}
 
-{#                                    </div>#}
-{#                                </div>#}
-{#                            {% endblock %}#}
+                            {% endblock %}
 
                             {% block component_product_box_properties %}
                                 {% sw_include '@Storefront/storefront/component/product/card/box-properties.html.twig' %}
                             {% endblock %}
 
-{#                            {% block component_product_box_description %}#}
-{#                                <div class="product-description">#}
-{#                                    {{ product.translated.description|striptags|raw }}#}
-{#                                </div>#}
-{#                            {% endblock %}#}
-
+                                    {#                            {% block component_product_box_description %}#}
+                                    {#                                <div class="product-description">#}
+                                    {#                                    {{ product.translated.description|striptags|raw }}#}
+                                    {#                                </div>#}
+                                    {#                            {% endblock %}#}
                             {% block component_product_box_price %}
                                 {% sw_include '@Storefront/storefront/component/product/card/price-unit.html.twig' %}
                             {% endblock %}
@@ -175,6 +177,10 @@
                 </div>
 
                 {% block component_product_box_action %}
+                    {% block component_product_box_variant_action %}
+                        {% sw_include '@Storefront/storefront/component/product/card/action-variantion.html.twig' %}
+                    {% endblock %}
+
                     {% sw_include '@Storefront/storefront/component/product/card/action.html.twig' %}
                 {% endblock %}
             {% endblock %}

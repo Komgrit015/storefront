@@ -46,10 +46,7 @@ class ProductSubscriber implements EventSubscriberInterface
         $criteria->addAssociation('children');
         $criteria->addAssociation('variation');
 
-
-
         $availableSortings = $this->getAvailableSortings($event);
-
 
         $availableSortings->add($this->createCustomSorting('Manufacturer ascending', 'testw', 'product.manufacturer.name', 'asc'));
             $availableSortings->add($this->createCustomSorting('Properties Region', 'testwd','product.properties.group.name.Land/Region', 'desc'));
@@ -58,10 +55,12 @@ class ProductSubscriber implements EventSubscriberInterface
         $event->getCriteria()->addExtension('sortings', $availableSortings);
 
     }
+
     private function getAvailableSortings(ProductListingCriteriaEvent $event): ProductSortingCollection
     {
         return $event->getCriteria()->getExtension('sortings') ?? new ProductSortingCollection();
     }
+
     private function createCustomSorting(string $label, string $key, string $field, string $order): ProductSortingEntity
     {
         $customSorting = new ProductSortingEntity();
