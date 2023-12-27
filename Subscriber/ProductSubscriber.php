@@ -44,6 +44,7 @@ class ProductSubscriber implements EventSubscriberInterface
         // Add associations to load variants
         $criteria->addAssociation('options');
         $criteria->addAssociation('children');
+        $criteria->addAssociation('children.options');
         $criteria->addAssociation('variation');
 
         $availableSortings = $this->getAvailableSortings($event);
