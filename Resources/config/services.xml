@@ -46,6 +46,24 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+<!--        <service id="vinaturel_storefront.line_item_list_ref_repository_decorator"-->
+<!--                 class="SwagTemplate\Services\LineItemListRefRepositoryDecorator"-->
+<!--                 decoration-priority="400"-->
+<!--        >-->
+<!--            <argument id="vinaturel_storefront.line_item_list_ref_repository_decorator.inner" type="service"/>-->
+<!--            <argument id="sales_channel.product.repository" type="service"/>-->
+<!--        </service>-->
+
+        <service id="SwagTemplate\Storefront\Checkout\CheckoutSubscriber">
+            <argument type="service" id="sales_channel.product.repository"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+<!--        <service id="SwagTemplate\Extension\ManufacturersExtension" public="true">-->
+<!--            <argument type="service" id="product_manufacturer.repository"/>-->
+<!--            <tag name="twig.extension"/>-->
+<!--        </service>-->
+
     </services>
 
 </container>
