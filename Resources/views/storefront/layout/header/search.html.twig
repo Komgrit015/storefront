@@ -1,0 +1,41 @@
+{% block layout_header_search %}
+    <div class="collapse"
+         id="searchCollapse">
+        <div class="header-search mt-0 mr-lg-0 mb-lg-0">
+            <form action="{{ path('frontend.search.page') }}"
+                  method="get"
+                  data-search-form="true"
+                  data-url="{{ path('frontend.search.suggest') }}?search="
+                  class="header-search-form">
+                {% block layout_header_search_input_group %}
+                    <div class="input-group border-bottom border-primary">
+                        {% block layout_header_search_button %}
+                            {# @deprecated tag:v6.5.0 - Bootstrap v5 removes `input-group-append` wrapper and uses elements as direct children of `input-group` #}
+
+                                <div class="input-group-append">
+                                    <button type="submit"
+                                            class="btn header-search-btn border-0 ps-0"
+                                            aria-label="{{ "header.searchButton"|trans|striptags }}">
+                                        <span class="header-search-icon">
+                                            {% sw_icon 'search' %}
+                                        </span>
+                                    </button>
+                                </div>
+                        {% endblock %}
+                        {% block layout_header_search_input %}
+                            <input type="search"
+                                   name="search"
+                                   class="form-control header-search-input border-0"
+                                   autocomplete="off"
+                                   autocapitalize="off"
+                                   placeholder="{{ "header.searchPlaceholder"|trans|striptags }}"
+                                   aria-label="{{ "header.searchPlaceholder"|trans|striptags }}"
+                                   value="{{ page.searchTerm }}"
+                            >
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+.training-card{
+    border: 1px solid $sw-border-color;
+    margin-bottom: 20px;
+    background-color: $cardColor;
+    color: $card-text-color;
+
+    .img-container{
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+
+        img{
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+
+    .card-body{
+        padding: 20px;
+    }
+}
+
+/*
+ * Page sections
+ * ----------------------- */
+@import 'page/wishlist/wishlist';
+
+/*
+ * Component sections
+ * ----------------------- */
+
+@import 'component/cms-sc-filter-component';
+@import 'component/product-box-standard';
+@import 'component/product-wishlist';
+
+/*
+ * Layout-related sections
+ * ----------------------- */
+//@import 'layout/top-bar';
+@import 'layout/container';
+
+@import 'layout/header';
+@import 'layout/footer';
+

@@ -1,0 +1,132 @@
+{% sw_extends '@Storefront/storefront/element/cms-element-product-slider.html.twig' %}
+
+{% block element_product_slider %}
+    
+    {% if manufacturer and page.manufacturerCrosssells.count %}
+        {% if not sliderConfig %}
+            {% set title = "swag.cms.otherWinesTitle" | trans %}
+            {% set sliderConfig = {"title":{"name":"title","source":"static","value": title,"extensions":[]},"border":{"name":"border","source":"static","value":false,"extensions":[]},"rotate":{"name":"rotate","source":"static","value":false,"extensions":[]},"products":{"name":"products","source":"static","value":["00011a970e84457089b4a6de6d6cbb45","0003c5b980194e18be2a0970c3fe1769","000b8bdbb4874576b4d7091c8b483760","000f96f6b09f405c880cad90b49743e5","0087e00f316949a59d687e29a607eabe","0050ad61db8f4173b03170798781cb31","00b0c58ee6374689928950ddd6d996f1","00c10134686d429993ae30759a3c4fc8","00c52b7393784dd7a44565a881146eb2","0126ef5e0f0d4360a01440fe62c74328","011e5f5505ac433997c17b3932e42090"],"extensions":[]},"boxLayout":{"name":"boxLayout","source":"static","value":"image","extensions":[]},"elMinWidth":{"name":"elMinWidth","source":"static","value":"242px","extensions":[]},"navigation":{"name":"navigation","source":"static","value":true,"extensions":[]},"displayMode":{"name":"displayMode","source":"static","value":"standard","extensions":[]},"verticalAlign":{"name":"verticalAlign","source":"static","value":null,"extensions":[]},"productStreamLimit":{"name":"productStreamLimit","source":"static","value":10,"extensions":[]},"productStreamSorting":{"name":"productStreamSorting","source":"static","value":"createdAt:DESC","extensions":[]}} %}
+        {% endif %}
+        <div class="product-slider-standard">
+            <div class="cms-block boxed-slider pos-0 cms-block-product-slider" style="">
+                <div class="cms-block-container" style="padding: 20px 20px 20px 20px;">
+                    <div class="cms-block-container-row row cms-row ">
+                        <div class="col-12">
+                            <div style="max-width: unset"
+                                 class="cms-element-product-slider {% if sliderConfig.displayMode.value == "standard" and sliderConfig.verticalAlign.value %} has-vertical-alignment{% endif %}">
+                                {% block element_product_slider_alignment %}
+                                    {% if config.verticalAlign.value %}
+                                        <div class="cms-element-alignment{% if sliderConfig.verticalAlign.value == "center" %} align-self-center{% elseif sliderConfig.verticalAlign.value == "flex-end" %} align-self-end{% else %} align-self-start{% endif %}">
+                                    {% endif %}
+
+                                    {% set productSliderOptions = {
+                                        productboxMinWidth: sliderConfig.elMinWidth.value ? sliderConfig.elMinWidth.value : '',
+                                        slider: {
+                                            gutter: 20,
+                                            autoplayButtonOutput: false,
+                                            nav: true,
+                                            mouseDrag: false,
+                                            controls: sliderConfig.navigation.value ? true : false,
+                                            autoplay: sliderConfig.rotate.value ? true : false
+                                        }
+                                    } %}
+
+                                    {% if not sliderConfig.navigation.value %}
+                                        {% set productSliderOptions = productSliderOptions|replace_recursive({
+                                            slider: {
+                                                mouseDrag: true
+                                            }
+                                        }) %}
+                                    {% endif %}
+                                    {% block element_product_slider_slider %}
+                                        <div class="base-slider product-slider{% if sliderConfig.border.value %} has-border{% endif %}{% if sliderConfig.navigation.value %} has-nav{% endif %}"
+                                             data-product-slider="true"
+                                             data-product-slider-options="{{ productSliderOptions|json_encode }}">
+
+                                            {% block element_product_slider_title %}
+                                                {% if sliderConfig.title.value %}
+                                                    <div class="cms-element-title">
+                                                        <p class="cms-element-title-paragraph">{{ sliderConfig.title.value }}</p>
+                                                    </div>
+                                                {% endif %}
+                                            {% endblock %}
+                                            {% block element_product_slider_inner %}
+                                                {% block element_product_slider_element %}
+                                                    <div class="product-slider-container d-flex"
+                                                         data-product-slider-container="true">
+                                                        {% for crosssell in page.manufacturerCrosssells %}
+                                                            {% block element_product_slider_inner_item %}
+                                                                {% if manufacturers.elements and manufacturers.elements[product.manufacturerId] %}
+                                                                    {{ product.setManufacturer(manufacturers.elements[product.manufacturerId]) }}
+                                                                {% endif %}
+
+                                                                <div class="product-slider-item is-blurred ">
+                                                                    {% sw_include '@Storefront/storefront/component/product/card/box.html.twig' with {
+                                                                        'layout': 'standard',
+                                                                        'product': crosssell
+                                                                    } %}
+                                                                </div>
+                                                            {% endblock %}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endblock %}
+
+                                                {% block element_product_slider_controls %}
+                                                    {% if sliderConfig.navigation.value %}
+                                                        <div class="product-slider-controls-container">
+                                                            <div class="base-slider-controls"
+                                                                 data-product-slider-controls="true">
+                                                                {% block element_product_slider_controls_items %}
+                                                                    <button class="base-slider-controls-prev product-slider-controls-prev{% if sliderConfig.border.value %} has-border{% endif %}">
+                                                                        {% block element_product_slider_controls_items_prev_icon %}
+                                                                            {% sw_icon 'leftArrow' style {'namespace': 'SwagTemplate', 'pack': 'swag'} %}
+                                                                        {% endblock %}
+                                                                    </button>
+                                                                    <button class="base-slider-controls-next product-slider-controls-next{% if sliderConfig.border.value %} has-border{% endif %}">
+                                                                        {% block element_product_slider_controls_items_next_icon %}
+                                                                            {% sw_icon 'rightArrow' style {'namespace': 'SwagTemplate', 'pack': 'swag'} %}
+                                                                        {% endblock %}
+                                                                    </button>
+                                                                {% endblock %}
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endblock %}
+                                            {% endblock %}
+                                        </div>
+                                    {% endblock %}
+                                    {% if config.verticalAlign.value %}
+                                        </div>
+                                    {% endif %}
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // let nav = parseInt(this.el.getAttribute('data-nav')) + 1;
+            // this.el.innerHTML = '<span>' + nav + '</span>';
+        </script>
+
+{#        <div class="d-flex">#}
+{#            {% for crosssell in page.manufacturerCrosssells %}#}
+{#                {% block element_product_slider_inner_item %}#}
+{#                    {% if manufacturers.elements and manufacturers.elements[product.manufacturerId] %}#}
+{#                        {{ product.setManufacturer(manufacturers.elements[product.manufacturerId]) }}#}
+{#                    {% endif %}#}
+{#                        <div class="cms-listing-col col-sm-6 col-lg-4 col-xl-3">#}
+{#                            {% sw_include '@Storefront/storefront/component/product/card/box.html.twig' with {#}
+{#                                'layout': 'standard',#}
+{#                                'product': crosssell#}
+{#                            } %}#}
+{#                        </div>#}
+{#                {% endblock %}#}
+{#            {% endfor %}#}
+{#        </div>#}
+    {% endif %}
+
+{% endblock %}
+

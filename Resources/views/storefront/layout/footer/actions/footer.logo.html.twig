@@ -1,0 +1,9 @@
+{#{% sw_extends '@Storefront/storefront/layout/header/logo.html.twig' %}#}
+
+{% block layout_footer_logo_image_default %}
+    {% if theme_config('sw-logo-footer') %}
+        <img src="{{ theme_config('sw-logo-footer') |sw_encode_url }}"
+{#             alt="{{ "header.logoLink"|trans|striptags }}"#}
+             class="img-fluid footer-logo-main-img"/>
+    {% endif %}
+{% endblock %}

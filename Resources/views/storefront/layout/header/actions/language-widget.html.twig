@@ -1,0 +1,55 @@
+{% sw_extends '@Storefront/storefront/layout/header/actions/language-widget.html.twig' %}
+{% block layout_header_actions_language_widget_form %}
+    <form method="post"
+          action="{{ path('frontend.checkout.switch-language') }}"
+          class="language-form"
+          data-form-auto-submit="true">
+
+        {% block layout_header_actions_language_widget_form_csrf %}
+
+        {% endblock %}
+
+        {% block layout_header_actions_language_widget_content %}
+            {% set isoCode = page.header.activeLanguage.translationCode.code|lower|split('-') %}
+            {% set country = isoCode[0] %}
+            {% set language = isoCode[1] %}
+
+            <div class="languages-menu">
+
+                {% block layout_header_actions_languages_widget_form_items %}
+                    <div class="top-bar-list d-flex"
+                         aria-labelledby="languages-{{ position }}">
+                        {% for language in  page.header.languages %}
+                            <div class="top-bar-list-item item{% if language.id is same as(page.header.activeLanguage.id) %} item-checked{% endif %} p-0 up text-uppercase"
+                                 title="{{ language.translated.name }}">
+
+                                {% block layout_header_actions_languages_widget_form_items_flag %}
+                                    {% set isoCode = language.translationCode.code|lower|split('-') %}
+                                    {% set flagCountry = isoCode[0] %}
+                                    {% set flagLanguage = isoCode[1] %}
+
+                                    <label class="top-bar-list-label px-2"
+                                           for="{{ position }}-{{ language.id }}">
+                                        <input id="{{ position }}-{{ language.id }}"
+                                               class="top-bar-list-radio"
+                                               value="{{ language.id }}"
+                                               name="languageId"
+                                               type="radio"
+                                            {% if language.id is same as(page.header.activeLanguage.id) %} checked{% endif %}>
+                                        {{ flagCountry }}
+                                    </label>
+                                {% endblock %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endblock %}
+            </div>
+
+            <input name="redirectTo" type="hidden" value="{{ app.request.get('_route') }}"/>
+
+            {% for key, value in app.request.attributes.get('_route_params') %}
+                <input name="redirectParameters[{{ key }}]" type="hidden" value="{{ value }}">
+            {% endfor %}
+        {% endblock %}
+    </form>
+{% endblock %}
