@@ -1,0 +1,126 @@
+.header-main{
+    width: 100%;
+    background: #ffffff;
+    z-index: 999;
+
+    > .container{
+        padding: 0 ;
+    }
+    .header-left-col{
+        @media (min-width: 993px) {
+            position: absolute;
+        }
+    }
+    .header-search-col{
+        @media (min-width: 993px) {
+            border-top: 1px solid;
+        }
+    }
+
+    .header-logo-main-link{
+        &:before{
+            width: 60px;
+            height: 50px;
+            content: '';
+            background-color: #fff;
+            display: inline-block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            z-index: 1;
+        }
+    }
+
+    .header-logo-main-img{
+        position: relative;
+        z-index: 2;
+    }
+
+    .border-header-action{
+        @media (max-width: 992.99px) {
+            border-top: 1px solid;
+            border-bottom: 1px solid;
+            .border-lg-right{
+                justify-content: center;
+                text-align: center;
+                &:not(:last-child){
+                    border-right: 1px solid;
+                }
+            }
+        }
+
+    }
+    .header-navigation-bottom{
+        .nav-line-bottom{
+            border-bottom: 5px solid #edd85e;
+        }
+        .main-navigation-menu{
+            margin-left: -10px;
+        }
+        .main-navigation-link-text{
+            border: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .nav-container{
+        border-bottom: 2px solid #929292;
+    }
+    .announcement-container{
+        .container{
+            background: #edd85e;
+        }
+        .announcements-info{
+            padding: 10px 0;
+        }
+    }
+
+    .header-cart .header-cart-badge{
+        @media (max-width: 992.99px) {
+            right: auto;
+        }
+    }
+
+    .main-navigation-link{
+        padding: 10px;
+        border: 1px solid transparent;
+        &.is-open{
+            border: 1px solid #787878;
+        }
+    }
+
+    .navigation-flyouts{
+        .navigation-flyout{
+            position: absolute;
+            top: -26px;
+            padding: 20px;
+            margin-left: -10px;
+            background: none;
+            box-shadow: none;
+        }
+        .container{
+            background: #fff;
+            padding: 1rem;
+            box-shadow: 0 43px 43px -6px rgb(0 0 0 / 20%);
+            border: 1px solid #787878;
+        }
+        .navigation-flyout-bar{
+            display: none;
+        }
+
+    }
+
+    .navigation-flyout-link{
+        font-size: 14px;
+    }
+
+    .navigation-flyout-link.is-level-0{
+        &:hover{
+            color: #4a545b;
+            padding-left: 0;
+        }
+    }
+
+
+}

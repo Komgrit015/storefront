@@ -1,0 +1,96 @@
+{
+  "name": "SwagTemplate",
+  "author": "Shopware AG",
+  "views": [
+     "@Storefront",
+     "@Plugins",
+     "@SwagTemplate"
+  ],
+  "style": [
+    "app/storefront/src/scss/overrides.scss",
+    "@Storefront",
+    "app/storefront/src/scss/base.scss"
+  ],
+  "script": [
+    "@Storefront",
+      "app/storefront/dist/storefront/js/swag-template.js"
+  ],
+  "asset": [
+    "@Storefront",
+    "app/storefront/src/assets"
+  ],
+    "config": {
+        "blocks": {
+            "settings": {
+                "label": {
+                    "en-GB": "Color Settings",
+                    "de-De":"Farbeinstellungen"
+                }
+            }
+        },
+        "sections": {
+            "overriddenVariables": {
+                "label": {
+                    "en-GB": "Overridden Variables",
+                    "de-De":"Überschriebene Variablen"
+                }
+            },
+            "newVariables": {
+                "label": {
+                    "en-GB": "New Variables",
+                    "de-De":"Neue Variablen"
+                }
+            }
+        },
+        "fields": {
+            "sw-color-brand-primary": {
+                "label": {
+                    "en-GB": "Primary color",
+                    "de-De":"Hauptfarbe"
+                },
+                "type": "color",
+                "block": "settings",
+                "section": "Overridden Variables",
+                "value": "#48AB18"
+            },
+            "cardColor": {
+                "label": {
+                    "en-GB": "Card color",
+                    "de-De":"Kartenfarbe"
+                },
+                "type": "color",
+                "editable": true,
+                "block": "settings",
+                "section": "New Variables",
+                "value": "#EF8376"
+            },
+            "card-text-color": {
+                "label": {
+                    "en-GB": "Card text color",
+                    "de-De":"Kartenfarbe"
+                },
+                "type": "color",
+                "editable": true,
+                "block": "settings",
+                "section": "New Variables",
+                "value": "#fff"
+            },
+            "sw-logo-footer": {
+                "label": {
+                    "en-GB": "Footer",
+                    "de-DE": "Footer"
+                },
+                "helpText": {
+                    "en-GB": "Displayed for logo image footer",
+                    "de-DE": "Displayed for logo image footer"
+                },
+                "type": "media",
+                "value": "app/storefront/dist/assets/logo/demostore-logo.png",
+                "editable": true,
+                "block": "media",
+                "order": 100,
+                "fullWidth": true
+            }
+        }
+    }
+}

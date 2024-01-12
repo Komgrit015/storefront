@@ -1,0 +1,67 @@
+{% set config = { sorting: current } %}
+{% set showSorting = (slot.config.showSorting.value is defined) ? slot.config.showSorting.value : true %}
+
+{% if showSorting and sortings|length > 1 %}
+    <div class="sorting" data-listing-sorting="true" data-listing-sorting-options='{{ config|json_encode }}'>
+        <select class="sorting {{ formSelectClass }} d-none" aria-label="{{ 'general.sortingLabel'|trans|striptags }}">
+            {% for sorting in sortings %}
+                {% set key = sorting.key %}
+                <option value="{{ key }}"{% if key == current %} selected{% endif %}>{{ sorting.translated.label|sw_sanitize }}</option>
+            {% endfor %}
+        </select>
+        <div class="swag-sorting"
+             data-bs-toggle="dropdown"
+             data-boundary="viewport"
+             data-offset="0,8"
+             aria-haspopup="true"
+             data-js="swag_sorting_toggle"
+        >{{ 'general.sortingLabel'|trans|striptags }}</div>
+        <div class="sorting-dropdown filter-panel-item-dropdown{% if sidebar %} collapse{% else %} dropdown-menu{% endif %}" data-js="swag_sorting_dropdown" >
+            <div class="element-icon-polygon">
+                <ul>
+                    {% for sorting in sortings %}
+                        {% set key = sorting.key %}
+                        <li data-value="{{ key }}" data-selected="{% if key == current %}true{% else %}false{% endif %}">{{ sorting.translated.label|sw_sanitize }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<script>
+
+    const select = document.querySelector('select');
+    const toggle = document.querySelector('[data-js="swag_sorting_toggle"]');
+    const drodown = document.querySelector('[data-js="swag_sorting_dropdown"]');
+    const drodownItems = document.querySelectorAll('li');
+
+    function onClickToggle(event) {
+        drodown.classList.toggle('show');
+    }
+
+   function onClickDropdownItem(event){
+       drodownItems.forEach(item => item.dataset.selected = 'false')
+       event.currentTarget.dataset.selected = 'true';
+       drodown.classList.remove('show');
+
+       select.value = event.currentTarget.dataset.value;
+
+       select.dispatchEvent(new Event('change'));
+
+   }
+
+    drodownItems.forEach(item => item.addEventListener('click', onClickDropdownItem.bind(this)));
+
+    toggle.addEventListener('click', onClickToggle.bind(this));
+
+    document.addEventListener('click', function (event) {
+        const isClickInsideDropdown = drodown.contains(event.target);
+        const isClickOnToggle = toggle.contains(event.target);
+
+        if (!isClickInsideDropdown && !isClickOnToggle) {
+            drodown.classList.remove('show');
+        }
+    });
+
+</script>
