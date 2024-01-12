@@ -1,0 +1,177 @@
+{% block layout_footer_inner_container %}
+    <div class="container py-5">
+        {% block layout_footer_navigation %}
+            <div class="row">
+                <div class="col-12">
+                    {% block layout_footer_logo %}
+                        <div class="col-12 col-lg-auto test-logo-col mb-5 p-0">
+                            <div class="d-flex justify-content-center">
+                                {% sw_include '@Storefront/storefront/layout/footer/actions/footer.logo.html.twig' %}
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="row">
+                        {% block layout_footer_navigation_hotline %}
+                            <div class="col-12 footer-column js-footer-column">
+                                {% block layout_footer_navigation_hotline_headline %}
+                                    <div class="footer-column-headline footer-headline pt-0">
+                                        <h5>{{ 'footer.serviceHotlineHeadline'|trans|sw_sanitize }}</h5>
+                                    </div>
+                                {% endblock %}
+
+                                {% block layout_footer_navigation_hotline_content %}
+                                    <div id="collapseFooterHotline"
+                                         class="footer-column-content collapse js-footer-column-content footer-contact"
+                                         aria-labelledby="collapseFooterHotlineTitle">
+                                        <div class="footer-column-content-inner">
+                                            <p class="footer-contact-hotline">
+                                                {{ 'footer.serviceHotline'|trans|sw_sanitize }}
+                                            </p>
+                                        </div>
+                                        <div class="footer-contact-form">
+                                            {{ 'footer.serviceContactLink'|trans({
+                                                '%url%': path('frontend.cms.page', { id: config('core.basicInformation.contactPage') })
+                                            })|raw }}
+                                        </div>
+                                    </div>
+                                {% endblock %}
+                            </div>
+                        {% endblock %}
+                    </div>
+                </div>
+
+
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <h5>{{ 'footer.UnsereWeineHeadline'|trans|sw_sanitize }}</h5>
+                    <ul class="list-unstyled">
+                        {% for treeItem in page.header.navigation.tree %}
+
+                            {% if treeItem.category.name =="Weine kaufen"  %}
+                                {% set category = treeItem.children %}
+
+                                {% for treeItem in category %}
+                                {% for item in treeItem.children %}
+
+                                    {% set name = item.category.name %}
+                                    {% set category = item.category %}
+                                    {% set categorId = category.id %}
+                                    {% set categorId = category.id %}
+
+                                    {% for item2 in item.children %}
+                                        {% set category = item2.category %}
+                                            <li class="footer-link-item">
+                                                <a class="footer-link"
+                                                   href="{% if externalLink %}{{ externalLink }}{% else %}{{ seoUrl('frontend.navigation.page', { navigationId: category.id }) }}{% endif %}"
+                                                   title="{{ item2.category.name }}">
+                                                    {{ item2.category.name }}
+                                                </a>
+                                            </li>
+                                    {% endfor %}
+
+                                    {% if name == 'Italien'%}
+                                        <li class="footer-link-item">
+                                            <a class="footer-link"
+                                               href="{% if externalLink %}{{ externalLink }}{% else %}{{ seoUrl('frontend.navigation.page', { navigationId: category.id }) }}{% endif %}"
+                                               title="{{ name }}">
+                                                {{ name }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if name == 'USA'%}
+                                        <li class="footer-link-item">
+                                            <a class="footer-link"
+                                               href="{% if externalLink %}{{ externalLink }}{% else %}{{ seoUrl('frontend.navigation.page', { navigationId: category.id }) }}{% endif %}"
+                                               title="{{ name }}">
+                                                {{ name }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if name == 'Schweiz'%}
+                                        <li class="footer-link-item">
+                                            <a class="footer-link"
+                                               href="{% if externalLink %}{{ externalLink }}{% else %}{{ seoUrl('frontend.navigation.page', { navigationId: category.id }) }}{% endif %}"
+                                               title="{{ name }}">
+                                                {{ name }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="row">
+                        {% block layout_footer_navigation_columns %}
+                            {% for root in page.footer.navigation.tree %}
+                                {% block layout_footer_navigation_column %}
+                                    <div class="col-6 footer-column footer-links">
+                                        {% block layout_footer_navigation_information_content %}
+                                            <div class="footer-column-content">
+                                                <div class="footer-column-content-inner">
+                                                    {% block layout_footer_navigation_information_links %}
+                                                        <h5>{{ root.category.name|trans|sw_sanitize }}</h5>
+                                                        <ul class="list-unstyled">
+                                                            {% for treeItem in root.children %}
+                                                                {% set category = treeItem.category %}
+                                                                {% set name = category.translated.name %}
+                                                                {% set externalLink = category.translated.externalLink %}
+                                                                {% block layout_footer_navigation_information_link_item %}
+                                                                    {% if  name != 'Kontakt'%}
+                                                                        <li class="footer-link-item">
+                                                                            {% block layout_footer_navigation_information_link %}
+                                                                                <a class="footer-link"
+                                                                                   href="{% if externalLink %}{{ externalLink }}{% else %}{{ seoUrl('frontend.navigation.page', { navigationId: category.id }) }}{% endif %}"
+                                                                                   title="{{ name }}">
+                                                                                    {{ name }}
+                                                                                </a>
+                                                                            {% endblock %}
+                                                                        </li>
+                                                                    {% endif %}
+                                                                {% endblock %}
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% endblock %}
+                                                </div>
+                                            </div>
+                                        {% endblock %}
+                                    </div>
+                                {% endblock %}
+                            {% endfor %}
+                        {% endblock %}
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <h5>{{ 'footer.AboutHeadline'|trans|sw_sanitize }}</h5>
+                    <p>{{ 'footer.About'|trans|sw_sanitize }}</p>
+
+                </div>
+
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-6 col-lg-4">
+                    {% block layout_footer_copyright %}
+                        <div class="footer-copyright text-start">
+                            All rights are reserved © 2023 - www.My-shopware6.de
+                        </div>
+                    {% endblock %}
+
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+
+{% endblock %}
+
+{% block layout_footer_bottom %}
+{% endblock %}

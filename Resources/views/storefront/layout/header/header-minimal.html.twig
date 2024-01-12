@@ -1,0 +1,21 @@
+{% sw_extends '@Storefront/storefront/layout/header/header.html.twig' %}
+
+
+{% block layout_header %}
+    <header class="header-main">
+        {# Inherit from parent block. #}
+        {% block layout_top_bar %}
+            <div class="w-100 d-none d-lg-block nav-container">
+                <div class="container">
+                    {% sw_include '@Storefront/storefront/layout/header/top-bar.html.twig' %}
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block layout_header_navigation %}
+            <div class="container">
+                {{ parent() }}
+            </div>
+        {% endblock %}
+    </header>
+{% endblock %}

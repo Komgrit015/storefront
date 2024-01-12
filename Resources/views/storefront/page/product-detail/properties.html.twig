@@ -1,0 +1,160 @@
+{% block page_product_detail_properties_inner %}
+    <div class="product-detail-properties">
+        {% block page_product_detail_properties_container %}
+            <div class="row product-detail-properties-container">
+                <div class="col-md-10 col-lg-6">
+                    {% block page_product_detail_properties_table %}
+                        {#                        <table class="table table-striped product-detail-properties-table">#}
+                        {#                            <tbody>#}
+                        {#                            #}{# @var product \Shopware\Core\Content\Product\SalesChannel\SalesChannelProductEntity #}
+                        {#                            {% for group in page.product.sortedProperties %}#}
+                        {#                                {{ dump(group) }}#}
+                        {#                                {% block page_product_detail_properties_table_row %}#}
+                        {#                                    <tr class="properties-row">#}
+                        {#                                        {% block page_product_detail_properties_item_label %}#}
+                        {#                                            <th class="properties-label">{{ group.translated.name|e }}:</th>#}
+                        {#                                        {% endblock %}#}
+                        {#                                        {% block page_product_detail_properties_item_value %}#}
+                        {#                                            <td class="properties-value">#}
+                        {#                                                {% apply spaceless %}#}
+                        {#                                                    {% for option in group.options %}#}
+                        {#                                                        {% set i = ( i | default(0) ) + 1 %}#}
+                        {#                                                        <span>{% if i > 1 %}, {% endif %}{{ option.translated.name|e }}</span>#}
+                        {#                                                    {% endfor %}#}
+                        {#                                                {% endapply %}#}
+                        {#                                            </td>#}
+                        {#                                        {% endblock %}#}
+                        {#                                    </tr>#}
+                        {#                                {% endblock %}#}
+                        {#                            {% endfor %}#}
+                        {#                            </tbody>#}
+                        {#                        </table>#}
+
+                        {% set propertyGroupIds = {
+                            'a018c989a02643baa2d26c85f80cfd5c':'region',
+                            'ced9356fbb6e45b48151b4337df48a25':'winetype',
+                            '6d3e04d9b87a4668a945bf4012591c39':'year',
+                            'd213f1b121424013a4559668cff5801a':'volume',
+                            '31a5da06bfa6419e8ac4230c1c086f35':'farbe',
+                            '74f19f7169344a5aa8df4aeeeb1bae7b':'lager',
+                            '4ed1b8baab83467780543065849409f7': 'bio',
+                        } %}
+
+                        {% set productPropertiesGeneral = {
+                            region: null,
+                            winetype: null,
+                            year: null,
+                            volume: null,
+                            farbe: null,
+                            lager: null,
+                            bio: null,
+                        } %}
+                        {% set continue = false %}
+
+{#                        {{ dump(propertyGroupIds) }}#}
+
+                        {% for property in page.product.sortedProperties %}
+                            {% if property.options|length > 0 %}
+                                {% set optionItem = {} %}
+                                {% for option in property.options %}
+                                    {% if 'region' == propertyGroupIds[property.id] %}
+                                        {% set optionItem = { region: {
+                                            name: property.translated.name,
+                                            value: [option.translated.name],
+                                        } } %}
+
+                                    {% elseif 'year' == propertyGroupIds[property.id] %}
+                                        {{ dump(productPropertiesGeneral.year.value) }}
+                                        {{ dump(property) }}
+                                        {% if productPropertiesGeneral.year.value %}
+                                            {% set optionItem = { year: {
+                                                name: property.translated.name,
+                                                value: [productPropertiesGeneral.year.value|join(', ') ~ ', ' ~ option.translated.name],
+                                            } } %}
+                                        {% else %}
+                                            {% set optionItem = { year: {
+                                                name: property.translated.name,
+                                                value: [option.translated.name],
+                                            } } %}
+                                        {% endif %}
+                                    {% elseif 'winetype' == propertyGroupIds[property.id] %}
+                                        {% set optionItem = { winetype: {
+                                            name: property.translated.name,
+                                            value: [option.translated.name],
+                                        } } %}
+                                    {%elseif 'volume' == propertyGroupIds[property.id] %}
+                                        {% set optionItem = { volume: {
+                                            name: property.translated.name,
+                                            value: [option.translated.name ~ 'ml'],
+                                        } } %}
+                                    {% elseif 'farbe' == propertyGroupIds[property.id] %}
+                                        {% set optionItem = { farbe: {
+                                            name: property.translated.name,
+                                            value: [option.translated.name],
+                                        } } %}
+                                    {% elseif 'lager' == propertyGroupIds[property.id] %}
+                                        {# {% set continue = true %}#}
+                                        {# {% set lager = option.translated.name %}#}
+                                        {# {% set lagersHtml = '<span class="lager-show">' %}#}
+                                        {# {% set lagersHtml = lagersHtml ~ '<span class="visually-hidden">' ~ option.translated.name|e ~ '</span>' %}#}
+
+                                        {# {% set i = ( i | default(0) ) + 1 %}#}
+
+                                        {# {% if lager == 1 %}#}
+                                        {# {% set lagersHtml = lagersHtml ~ '<span class="has"></span>' %}#}
+
+                                        {# {% else %}#}
+                                        {# {% for i in 1..lager %}#}
+                                        {# {% set lagersHtml = lagersHtml ~ '<span class="has"></span>' %}#}
+                                        {# {% endfor %}#}
+                                        {# {% endif %}#}
+
+                                        {# {% set lagersHtml = lagersHtml ~ '</span>' %}#}
+                                        {% set optionItem = { lager: {
+                                            name: property.translated.name,
+                                            value: [option.translated.name],
+
+                                        } } %}
+                                    {%elseif 'bio' == propertyGroupIds[property.id] %}
+                                        {% for bioMedia in property.options.elements %}
+
+                                            {% set sportsMediaId = bioMedia.mediaId %}
+
+                                            {# fetch media as batch - optimized for performance #}
+                                            {% set mediaCollection = searchMedia([sportsMediaId], context.context) %}
+
+                                            {# extract single media object #}
+                                            {% set sportsMedia = mediaCollection.get(sportsMediaId) %}
+
+                                            {% set optionItem = { bio: {
+                                                name: property.translated.name,
+                                                value: '<img src="' ~ sportsMedia.url ~ '" width="24" alt="' ~ sportsMedia.fileName ~ '"/>' ,
+                                            } } %}
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {% if optionItem|length > 0 and not continue %}
+                                        {% set productPropertiesGeneral = productPropertiesGeneral|merge(optionItem) %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <table class="table table-striped product-detail-properties-table">
+                            <tbody>
+                            {% for property in productPropertiesGeneral %}
+                                {% if property %}
+                                    <tr class="properties-row">
+                                        <th class="properties-label">{{ property.name|e }}</th>
+                                        <td class="properties-value">{{ property.value|join(', ')|raw }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
