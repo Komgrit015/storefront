@@ -58,7 +58,7 @@
             <argument type="service" id="sales_channel.product.repository"/>
             <tag name="kernel.event_subscriber"/>
         </service>
-
+ b
 <!--        <service id="SwagTemplate\Extension\ManufacturersExtension" public="true">-->
 <!--            <argument type="service" id="product_manufacturer.repository"/>-->
 <!--            <tag name="twig.extension"/>-->
